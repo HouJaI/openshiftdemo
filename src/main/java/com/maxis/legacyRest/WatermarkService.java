@@ -54,7 +54,7 @@ public class WatermarkService {
 
 		try {
 			
-			log.debug("inside pdf Mark");
+			log.info("inside pdf Mark");
 
 			System.out.println(pdfFile.getOriginalFilename());
 
