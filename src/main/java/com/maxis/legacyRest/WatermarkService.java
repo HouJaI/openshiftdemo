@@ -35,9 +35,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.apache.log4j.Logger;
 
 @RestController
 public class WatermarkService {
+	
+	static Logger log = Logger.getLogger(WatermarkService.class.getName());
 
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
@@ -50,6 +53,8 @@ public class WatermarkService {
 	public ResponseEntity<byte[]> pdfMark(@RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile) {
 
 		try {
+			
+			log.debug("inside pdf Mark");
 
 			System.out.println(pdfFile.getOriginalFilename());
 
@@ -69,7 +74,19 @@ public class WatermarkService {
 			return response;
 
 		} catch (Exception ex) {
-			return null;
+			
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.parseMediaType("text/plain"));
+			
+			
+			
+			String err_message = "ERROR OCCURED FOR WATERMARK; ERR_MESSAGE:" + ex.getMessage();
+
+			 byte[] err_message_rtn  = err_message.getBytes();
+			
+			 ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(err_message_rtn, headers, HttpStatus.OK);
+			return response;
 		}
 	}
 
@@ -178,8 +195,20 @@ public class WatermarkService {
 			return response;
 			
 		} catch (IOException ex) {
-			System.err.println(ex);
-			return null;
+			
+			System.out.println("error:"+ex.getMessage());
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.parseMediaType("text/plain"));
+			
+			
+			
+			String err_message = "ERROR OCCURED FOR WATERMARK; ERR_MESSAGE:" + ex.getMessage();
+
+			 byte[] err_message_rtn  = err_message.getBytes();
+			
+			 ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(err_message_rtn, headers, HttpStatus.OK);
+			return response;
 		}
 	}
 
